@@ -1,0 +1,88 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: Provisions API
+  description: API for retrieving provisiones 
+
+paths:
+  /api/v1/provisions:
+    x-router-controller: provisionsController
+    get:
+      description: Returns all provisions
+      operationId: getprovisions
+      responses:
+        200:
+          description: Provisions list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/provisions'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  
+  /api/v1/provisions/{disposal_number}:
+    x-router-controller: provisionsController
+    get:
+      description: Returns a single provision by its disposal_number
+      operationId: findBydisposal_number
+      parameters:
+        - required: true
+          name: disposal_number
+          description: disposal_number of the provision to fetch
+          in: path
+          schema:
+            type: number
+      responses:
+        200:
+          description: Provision found by disposal_number
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/provisions'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+ 
+components:
+  schemas:
+    provisions:
+        type: object
+        required:
+          - disposal_number
+        properties:
+          province:
+            type: string
+          year:
+            type: number
+          organization:
+            type: string
+          disposal_type:
+            type: string
+          disposal_number:
+            type: number
+          number_of_the_bulletin:
+            type: number
+          date_of_disposition:
+            type: string
+          section_number:
+            type: number
+          section:
+            type: string
+    error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+      additionalProperties: true
